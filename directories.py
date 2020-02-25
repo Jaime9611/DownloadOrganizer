@@ -21,21 +21,26 @@ class Downloads:
         dirs = { name: self.route / name for name in self.categories }
 
         for route in dirs.values():
-            route.mkdir()
+            if not route.exists():
+                route.mkdir()
 
         return dirs
 
-    def organize(self):
+    def _move_file(self, category, item):
+        target = self.dirs[category] / item
 
-        # for category, suffixes in self.categories.items():
-        #     for file in self.files:
-        #         if file.suffix in suffixes:
-        
-        pass
-    
-    def move_file(self, category, file):
-        pass
+        if not target.exists():
+            item.replace(target)
+
+    def organize(self):
+        for category, suffixes in self.categories.items():
+            for item in self.files[:]:
+                if item.suffix in suffixes:
+                    self._move_file(category, item)
+                    self.files.remove(item)
+        if self.files:
+            for item in self.files:
+                self.
 
 if __name__ == '__main__':
-    d = Downloads('~/Downloads')
-    print(d.dirs)
+    d = Downloads('..a')
