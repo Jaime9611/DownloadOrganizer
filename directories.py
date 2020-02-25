@@ -24,10 +24,17 @@ class Downloads:
             if not route.exists():
                 route.mkdir()
 
+        others = self.route / 'Others'
+        if not others.exists():
+            others.mkdir() # Create the 'Others' directory
+
         return dirs
 
     def _move_file(self, category, item):
-        target = self.dirs[category] / item
+        if category == 'Others':
+            target = self.route / category / item.name
+        else:
+            target = self.dirs[category] / item.name
 
         if not target.exists():
             item.replace(target)
@@ -38,9 +45,12 @@ class Downloads:
                 if item.suffix in suffixes:
                     self._move_file(category, item)
                     self.files.remove(item)
+
+        # ask for any uncategorized file
         if self.files:
             for item in self.files:
-                self.
+                self._move_file('Others', item)
+
 
 if __name__ == '__main__':
     d = Downloads('..a')
